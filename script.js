@@ -1,25 +1,33 @@
 // Initialize EmailJS
-(function () {
-    emailjs.init("pfwjcGajXd0cYQ5Oa"); // Replace with your public key
-})();
+emailjs.init("pfwjcGajXd0cYQ5Oa"); // Your Public Key
 
-document.getElementById("feedback-form").addEventListener("submit", function (event) {
-    event.preventDefault(); // Prevent default form submission
+// Form Submission
+const form = document.getElementById("feedback-form");
+const statusDiv = document.getElementById("status");
 
-    // Collect form data
-    const formData = {
-        name: document.getElementById("name").value,
-        email: document.getElementById("email").value,
-        message: document.getElementById("message").value,
-    };
+form.addEventListener("submit", function (event) {
+  event.preventDefault();
 
-    // Send email using EmailJS
-    emailjs.send("service_7ss5tie", "template_gzj8pse", formData)
-        .then(function (response) {
-            alert("Feedback sent successfully!");
-            console.log("SUCCESS!", response.status, response.text);
-        }, function (error) {
-            alert("Failed to send feedback. Please try again.");
-            console.error("FAILED...", error);
-        });
+  // Collect form data
+  const formData = {
+    user_name: form.name.value,
+    user_email: form.email.value,
+    user_message: form.message.value,
+  };
+
+  // Send email using EmailJS
+  emailjs
+    .send("service_7ss5tie", "template_gzj8pse", formData)
+    .then(
+      (response) => {
+        statusDiv.textContent = "Feedback sent successfully!";
+        statusDiv.style.color = "green";
+        form.reset(); // Reset the form
+      },
+      (error) => {
+        statusDiv.textContent = "Failed to send feedback. Please try again.";
+        statusDiv.style.color = "red";
+        console.error("EmailJS Error:", error);
+      }
+    );
 });
